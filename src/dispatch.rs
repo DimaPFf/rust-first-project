@@ -3,6 +3,8 @@ use crate::delivery::DeliveryOrder;
 use crate::delivery::OrderStatus;
 use crate::courier::Courier;
 use crate::error::{AssignmentError, DeliveryError};
+use crate::utils::find_by_id_mut;
+use crate::traits::Identifiable;
 
 pub struct Dispatch {
     orders: Vec<DeliveryOrder>,
@@ -29,12 +31,7 @@ impl Dispatch {
 
     // Найти заказ по ID (возвращает Option<&mut DeliveryOrder>)
     pub fn find_order_mut(&mut self, order_id: u32) -> Option<&mut DeliveryOrder> {
-        for order in self.orders.iter_mut() {
-            if order.get_order_id() == order_id {
-                return Some(order);
-            }
-        }
-        None
+        find_by_id_mut(&mut self.orders, order_id, |order| order.id() )
     }
 
     // Найти курьера по ID (возвращает Option<&mut Courier>)
@@ -47,7 +44,7 @@ impl Dispatch {
         order_id: u32,
         courier_id: u32,
     ) -> Result<(), AssignmentError> {
-        let order_idx = self.orders.iter().position(|o| o.get_order_id() == order_id)
+        let order_idx = self.orders.iter().position(|o| o.id() == order_id)
             .ok_or(AssignmentError::OrderNotFound)?; 
 
         // Проверка статуса
@@ -108,7 +105,7 @@ impl Dispatch {
     pub fn generate_report(&self) -> String {
         let mut result = String::new();
         for order in &self.orders {
-            let line = format!("Заказ {}: {}\n", order.get_order_id(), order.status_description());
+            let line = format!("Заказ {}: {}\n", order.id(), order.status_description());
             result.push_str(&line);
         }
         result

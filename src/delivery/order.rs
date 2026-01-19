@@ -1,3 +1,5 @@
+use crate::traits::{Identifiable, Loggable};
+
 pub enum OrderStatus {
     Created,
     Assigned  { courier_id: u32 },
@@ -19,6 +21,18 @@ pub struct DeliveryOrder {
     destination_altitude: u16, // высота доставки (в метрах)
     status: OrderStatus,
     cargo: Option<Cargo>,
+}
+
+impl Identifiable for DeliveryOrder {
+    fn id(&self) -> u32 {
+        self.id
+    }
+}
+
+impl Loggable for DeliveryOrder {
+    fn log_info(&self) -> String {
+        format!("ORDER[{}] {}", self.id(), self.status_description())
+    }
 }
 
 impl DeliveryOrder {
@@ -111,9 +125,5 @@ impl DeliveryOrder {
 
     pub fn destination_altitude(&self) -> u16 {
         self.destination_altitude
-    }
-
-    pub fn get_order_id(&self) -> u32 {
-        self.id
     }
 }

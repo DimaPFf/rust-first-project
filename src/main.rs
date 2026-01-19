@@ -2,10 +2,13 @@ mod delivery;
 mod courier;
 mod dispatch;
 mod error;
+mod traits;
+mod utils;
 
 use delivery::{DeliveryOrder};
 use courier::Courier;
 use dispatch::Dispatch;
+use traits::Loggable;
 
 fn main() {
     let mut dispatch = Dispatch::new();
@@ -35,4 +38,13 @@ fn main() {
     }
 
     println!("\n{}", dispatch.generate_report());
+
+    // Логирование через трейт
+    if let Some(order) = dispatch.find_order_mut(101) {
+        println!("Лог заказа: {}", order.log_info());
+    }
+    
+    if let Some(courier) = dispatch.find_courier_mut(1) {
+        println!("Лог курьера: {}", courier.log_info());
+    }
 }

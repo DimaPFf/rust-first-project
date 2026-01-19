@@ -1,3 +1,5 @@
+use crate::traits::{Identifiable, Loggable};
+
 pub struct Courier {
     pub id: u32,
     name: String,
@@ -5,6 +7,24 @@ pub struct Courier {
     max_altitude: u16,     // максимальная высота, на которую может подняться
     is_available: bool,    // свободен ли для нового заказа
     can_handle_fragile: bool,
+}
+
+impl Identifiable for Courier {
+    fn id(&self) -> u32 {
+        self.id
+    }
+}
+
+impl Loggable for Courier {
+    fn log_info(&self) -> String {
+        format!(
+            "COURIER[{}] {} (max_alt: {}, available: {})",
+            self.id(),
+            self.get_name(),
+            self.get_max_altitude(),
+            self.get_is_available()
+        )
+    }
 }
 
 impl Courier {
@@ -43,5 +63,13 @@ impl Courier {
 
     pub fn get_can_handle_fragile(&self) -> bool {
         self.can_handle_fragile
+    }
+
+    pub fn get_name(&self) -> &String {
+        &self.name
+    }
+
+    pub fn id(&self) -> u32 {
+        self.id
     }
 }

@@ -68,8 +68,4 @@ impl Courier {
     pub fn get_name(&self) -> &String {
         &self.name
     }
-
-    pub fn id(&self) -> u32 {
-        self.id
-    }
 }
